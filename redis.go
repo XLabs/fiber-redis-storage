@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -24,6 +25,14 @@ func New(config ...Config) (*Storage, error) {
 
 	// Parse the URL and update config values accordingly
 	if cfg.URL != "" {
+
+		// if not schema default to redis://
+		if !strings.HasPrefix(cfg.URL, "redis://") ||
+			!strings.HasPrefix(cfg.URL, "rediss://") ||
+			!strings.HasPrefix(cfg.URL, "unix://") {
+			cfg.URL = "redis://" + cfg.URL
+		}
+
 		options, err := redis.ParseURL(cfg.URL)
 		if err != nil {
 			return nil, err

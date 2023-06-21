@@ -352,3 +352,14 @@ func Test_Redis_Cluster(t *testing.T) {
 
 	utils.AssertEqual(t, nil, testStoreUniversal.Close())
 }
+
+func Test_Redis_Without_schmea(t *testing.T) {
+	// This should failover to creating a regular *redis.Client
+	// The Host and Port should get ignored since Addrs is defined
+	_, err := New(Config{
+		URL: "localhost:6379",
+	})
+
+	utils.AssertEqual(t, nil, err)
+
+}
